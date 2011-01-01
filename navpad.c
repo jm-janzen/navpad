@@ -4,39 +4,49 @@
  
 void prompt();
 void read(char*);
+char* match(int);
 
 struct  dirent *dir;
 int     idx;
-char*   dirStack[255][255];
+char*   dirStack[255];
 int     answer;
 int     noRun;
 
 int main(void) {
-    read(".");
-    prompt();
+    while (1) {
+        read(".");
+        prompt();
+    }
 }
 
 void prompt() {
-    printf("> ");
+    char* got;
+    printf("\n> ");
     scanf("%d", &answer);
     /* TODO
      * read answer and compare to dirStack,
-     * then print new list at that String.
+     * then show + print new list at that String.
      */
-    read("b");
+
+    got = match(answer);
+    printf("got:%s\n", got);
+
+    read(got); /* TODO take String variable from match, rather than literal value */
 }
+
+/*
+ * read cwd and store for action
+ */
 void read(char* l) {
+    printf("read(%s)\n", l);
+
     DIR* d = opendir(l);
     if (d) {
-        /* TODO
-         * flip and combine this logic
-         * into on giant if statement
-         */
         while ((dir = readdir(d)) != NULL) {
             char* fileName = dir->d_name;
             if (!strcmp(fileName, "..") || !strcmp(fileName, ".")) {
                 /*
-                 * skip this item
+                 * supress display of ./ ../
                  */
             } else if (!strncmp(".", fileName, 1)) {
                 /*
@@ -44,11 +54,25 @@ void read(char* l) {
                  */
             } else {
                 idx++;
-                dirStack[noRun][idx]= fileName;
-                printf("\[%d\]\t%s\n", idx, dirStack[noRun][idx]);
+                dirStack[idx] = fileName;
+                printf("[%d]\t%s\n", idx, dirStack[idx]);
             }
         }
         closedir(d);
     }
-    noRun++;
 }
+
+/*
+ * match answer == index in directory stack
+ */
+char* match(int a) {
+    printf("match(%d)\n", a);
+    for (int i = 0; i < sizeof(dirStack); i++) {
+        //printf("for i < %d", sizeof(dirStack));
+        if (i == a) {
+            printf("Found %s\n", dirStack[i]);
+            return dirStack[i];
+        }
+    }
+}
+
