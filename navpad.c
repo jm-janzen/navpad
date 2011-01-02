@@ -45,7 +45,7 @@ void read(char* l) {
             } else {
                 idx++;
                 dirStack[noRun][idx]= fileName;
-                printf("%s\n", dirStack[noRun][idx]);
+                printf("\[%d\]\t%s\n", idx, dirStack[noRun][idx]);
             }
         }
         closedir(d);
