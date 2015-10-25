@@ -1,0 +1,165 @@
+#!/bin/bash
+
+# should be navigable totally from numpad
+#########################
+#       N   /   *   -   #
+#       7   8   9   +   #
+#       4   5   6       #
+#       1   2   3       #
+#       0       .   E   #
+#########################
+# 1-9:  nav or cat N
+# 0  :  back to root
+# .  :  TODO
+# -  :  TODO
+# +  :  TODO
+
+# TODO
+# 1)    XXX index only refers to first showTree list TODO update on new list
+# 2)    XXX BUG: showTree process spaces as new beginning of new index
+# 3)    make more DRY: use showTree to print tree and return index(es?)
+#       from this derive valid range, maximum $answer
+# 4)    path gets messed up on symlinks (see Notes@)
+
+### housekeeping:
+bold=$(tput bold)
+norm=$(tput sgr0)
+homeDir="$(pwd)/"        # String dirname
+prevDir=""
+answer=""               # int    dirname[index]
+indexedList=""          #( $(tree -iFL 1 --noreport) )
+
+# print indexed tree on parameter
+# TODO return new index list
+function showTree () {
+    echo "entering showTree ($1)"
+    local N=0
+    for i in $(tree -iFL 1 --noreport $1); do
+        if [ $N -eq 0 ]; then
+            printf "[0]\t../\n"
+        else
+            printf "[$N]\t$i\n"
+            indexedList[$N]="$i"
+        fi 
+        let "N= $N + 1"
+    done
+    return $N #used to set max valid num
+}
+
+# main flow:
+#   get valid number from user input
+#   $answer, and go to readTree
+# alternate:
+#   if parameterized, show error and
+#   prompt again
+function prompt () {
+    echo "entering prompt ($1)"
+    if [ -z "$1" ]; then
+        read -p " > " answer
+        case $answer in
+            0 )         ### go back
+                readTree $prevDir'../' # works, but c'mon...
+                ;;
+            [1-9]* )    ### nav or edit index
+                if [ $answer -eq 0 ]; then
+                    readTree $prevDir'../' # works, but c'mon...
+                else
+                    readTree "${prevDir}${indexedList[$answer]}"
+                fi
+                ;;
+            [lLtT\*] )  ### list current directory entries
+                showTree $prevDir
+                ;;
+            [/] )       ### go back to starting directory
+                prevDir=""
+                readTree $homeDir
+                ;;
+            [hH]* )     ### display help text
+                printf "[lt*]\tshow tree\n"
+                printf "[N]\tshow tree at N\n"
+                printf "[qQ]\texit\n"
+                prompt
+                ;;
+            [qQ] )      ### exit utility
+                exit;;
+            * )         ### garbage man
+                prompt "not a valid command [0-9, lLtThHqQ]"
+                ;;
+        esac
+    else
+        printf "${bold}***ERROR:${norm} \"$1\"\n"
+        prompt
+    fi
+    prompt
+}
+
+# main flow:
+#   iterate through tree list (no display)
+#   get valid index match on ($answer equals $i)
+#   get valid dir/ name and pass to navTree
+# alternate:
+#   if not directory, go back to prompt
+function readTree () {
+    echo "entering readTree ($1)"
+    good="$(tree -iF $1 | head -1)"
+    fail="$1 [error opening dir]"
+
+    if [ -z "$1" ]; then
+        prompt "no directory index given"
+    elif ! [ -d "$1" ]; then
+        #prompt "file is not a directory"
+        openFile $1
+    elif [ "$good" == "$fail" ]; then
+        prompt "Invalid directory '$1'"
+    else
+
+        prevDir=$1
+        navTree $1
+    fi
+}
+
+# main flow:
+#   receive dir/
+#   invoke showTree($dir)
+#   clear dir/ ($go)
+#   go back to prompt
+# alternate:
+#   if no parameter, go back to prompt
+function navTree () {
+    echo "entering navTree ($1)"
+    if [ -z "$1" ]; then
+        prompt "Must specify an action"
+    fi
+    showTree $1
+    prompt
+}
+
+function openFile() {
+    echo "entering openFile($1)"
+    if [ "$(stat --format %F $1)" == "regular empty file" ]; then
+        prompt "empty file"
+    else
+        less --quit-at-eof $1
+        prompt
+    fi
+}
+
+###
+### main method
+###
+# main flow:
+#   1)  show tree
+#   2)  prompt
+#   3)  read tree
+#   4)  nav tree
+#   5)  goto (1)
+if [ $1 ]; then
+    echo "TODO take initial dir/"
+fi
+printf "MAIN\n\n\n"
+showTree
+prompt
+echo "/MAIN"
+
+### graveyard:
+    #ta=( $(tree -iFL 1 --noreport) )
