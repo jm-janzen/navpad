@@ -8,29 +8,26 @@
 #       1   2   3       #
 #       0       .   E   #
 #########################
-# 1-9:  nav or cat N
-# 0  :  back to root
+# 0  :  previous directory
+# 1-9:  navigate to, or view file
+# *  :  print files here again
 # .  :  TODO
 # -  :  TODO
 # +  :  TODO
 
-# TODO
-# 1)    XXX index only refers to first showTree list TODO update on new list
+# BUGS:
 # 2)    XXX BUG: showTree process spaces as new beginning of new index
-# 3)    make more DRY: use showTree to print tree and return index(es?)
-#       from this derive valid range, maximum $answer
 # 4)    path gets messed up on symlinks (see Notes@)
 
 ### housekeeping:
 bold=$(tput bold)
 norm=$(tput sgr0)
-homeDir="$(pwd)/"        # String dirname
+homeDir="$(pwd)/"       # String dirname
 prevDir=""
 answer=""               # int    dirname[index]
 indexedList=""          #( $(tree -iFL 1 --noreport) )
 
 # print indexed tree on parameter
-# TODO return new index list
 function showTree () {
     echo "entering showTree ($1)"
     local N=0
@@ -43,7 +40,6 @@ function showTree () {
         fi 
         let "N= $N + 1"
     done
-    return $N #used to set max valid num
 }
 
 # main flow:
