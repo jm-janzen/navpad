@@ -15,18 +15,19 @@ int main(void)
          * into on giant if statement
          */
         while ((dir = readdir(d)) != NULL) {
-            if (!strcmp(dir->d_name, "..") || !strcmp(dir->d_name, ".")) {
+            char* fileName = dir->d_name;
+            if (!strcmp(fileName, "..") || !strcmp(fileName, ".")) {
                 /*
                  * skip this item
                  */
-            } else if (!strncmp(".", dir->d_name, 1)) {
+            } else if (!strncmp(".", fileName, 1)) {
                 /*
                  * suppress display of hidden files
                  */
             } else {
                 idx++;
                 printf("\[%d\]\t %s\n"
-                  , idx, dir->d_name);
+                  , idx, fileName);
             }
         }
         closedir(d);
