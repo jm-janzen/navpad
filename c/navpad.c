@@ -10,7 +10,8 @@ int main(void)
     d = opendir(".");
     if (d) {
         while ((dir = readdir(d)) != NULL) {
-            printf("%d\t %s\n", i, dir->d_name);
+            printf("\[%d\]\t %s\n"
+              , i, dir->d_name);
             i++;
         }
         closedir(d);
