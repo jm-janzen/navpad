@@ -1,2 +1,2 @@
 # navpad
-Interactive bash CLI to navigate Linux via the numpad
+Interactive C CLI to navigate Linux via the numpad
