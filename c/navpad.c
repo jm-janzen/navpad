@@ -4,11 +4,11 @@
  
 int main(void)
 {
-    DIR *d;
-    struct dirent *dir;
-    int idx;
-    char* dirStack[255];
-    d = opendir(".");
+    DIR*    d = opendir(".");
+    struct  dirent *dir;
+    int     idx;
+    char*   dirStack[255];
+    char*   path[255];
     if (d) {
         /* TODO
          * flip and combine this logic
