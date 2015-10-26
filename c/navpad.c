@@ -10,6 +10,10 @@ int main(void)
     char* dirStack[255];
     d = opendir(".");
     if (d) {
+        /* TODO
+         * flip and combine this logic
+         * into on giant if statement
+         */
         while ((dir = readdir(d)) != NULL) {
             if (!strcmp(dir->d_name, "..") || !strcmp(dir->d_name, ".")) {
                 /*
