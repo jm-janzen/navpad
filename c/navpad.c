@@ -1,14 +1,32 @@
 #include <stdio.h>
-#include <dirent.h>
 #include <string.h>
+#include <dirent.h>
  
-int main(void)
-{
-    DIR*    d = opendir(".");
-    struct  dirent *dir;
-    int     idx;
-    char*   dirStack[255];
-    char*   path[255];
+void prompt();
+void read(char*);
+
+struct  dirent *dir;
+int     idx;
+char*   dirStack[255][255];
+int     answer;
+int     noRun;
+
+int main(void) {
+    read(".");
+    prompt();
+}
+
+void prompt() {
+    printf("> ");
+    scanf("%d", &answer);
+    /* TODO
+     * read answer and compare to dirStack,
+     * then print new list at that String.
+     */
+    read("b");
+}
+void read(char* l) {
+    DIR* d = opendir(l);
     if (d) {
         /* TODO
          * flip and combine this logic
@@ -26,13 +44,11 @@ int main(void)
                  */
             } else {
                 idx++;
-                printf("\[%d\]\t %s\n"
-                  , idx, fileName);
+                dirStack[noRun][idx]= fileName;
+                printf("%s\n", dirStack[noRun][idx]);
             }
         }
         closedir(d);
     }
-
-    getchar();
-    return(0);
+    noRun++;
 }
