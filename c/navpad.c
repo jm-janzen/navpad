@@ -6,13 +6,19 @@ int main(void)
 {
     DIR *d;
     struct dirent *dir;
-    int i;
+    int idx;
     d = opendir(".");
     if (d) {
         while ((dir = readdir(d)) != NULL) {
-            printf("\[%d\]\t %s\n"
-              , i, dir->d_name);
-            i++;
+            if (!strcmp(dir->d_name, "..") || !strcmp(dir->d_name, ".")) {
+                /*
+                 * skip this item
+                 */
+            } else {
+                idx++;
+                printf("\[%d\]\t %s\n"
+                  , idx, dir->d_name);
+            }
         }
         closedir(d);
     }
