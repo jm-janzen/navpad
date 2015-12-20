@@ -7,6 +7,9 @@
  * 2)   
  */
  
+/*
+ * prototypes
+ */
 void prompt();
 void read(char*);
 void show();
@@ -65,7 +68,7 @@ void read(char* l) {
                  * suppress display of hidden files
                  */
             } else {
-                idx++;
+                idx++; // start at [1], [0] reserved for prev dir
                 dirStack[idx] = fileName;
                 printf("[%d]\t%s\n", idx, dirStack[idx]);
             }
