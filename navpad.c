@@ -1,47 +1,59 @@
 #include <stdio.h>
 #include <string.h>
 #include <dirent.h>
+
+/* XXX bugs:
+ * 1)   entering N greater than sizeof num files: segmentation fault
+ * 2)   
+ */
  
 void prompt();
 void read(char*);
+void show();
 char* match(int);
 
 struct  dirent *dir;
-int     idx;
 char*   dirStack[255];
 int     answer;
 int     noRun;
 
 int main(void) {
-    while (1) {
-        read(".");
+    show();
+    do {
         prompt();
-    }
+    } while (1);
 }
 
+/* TODO
+ * validate answer
+ */
 void prompt() {
     char* got;
     printf("\n> ");
     scanf("%d", &answer);
-    /* TODO
-     * read answer and compare to dirStack,
-     * then show + print new list at that String.
-     */
+    switch (answer) {
+        case (0):
+            printf("going back\n");
+            break;
+        default:
+            printf("default\n");
+    }
 
     got = match(answer);
     printf("got:%s\n", got);
-
-    read(got); /* TODO take String variable from match, rather than literal value */
+    read(got);
 }
 
+void show() {
+    read(".");
+}
 /*
  * read cwd and store for action
  */
 void read(char* l) {
-    printf("read(%s)\n", l);
-
     DIR* d = opendir(l);
     if (d) {
+        int idx = 0;
         while ((dir = readdir(d)) != NULL) {
             char* fileName = dir->d_name;
             if (!strcmp(fileName, "..") || !strcmp(fileName, ".")) {
@@ -68,7 +80,6 @@ void read(char* l) {
 char* match(int a) {
     printf("match(%d)\n", a);
     for (int i = 0; i < sizeof(dirStack); i++) {
-        //printf("for i < %d", sizeof(dirStack));
         if (i == a) {
             printf("Found %s\n", dirStack[i]);
             return dirStack[i];
