@@ -32,8 +32,11 @@ int main(void) {
  */
 void prompt() {
     char* got;
-    printf("\n> ");
-    scanf("%d", &answer);
+
+    do {
+        printf("\n> ");
+        scanf("%d", &answer);
+    } while (getchar() != '\n');
     switch (answer) {
         case (0):
             printf("going back\n");
