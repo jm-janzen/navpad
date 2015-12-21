@@ -12,7 +12,6 @@
  */
 void prompt();
 void read(char*);
-void show();
 char* match(int);
 
 struct  dirent *dir;
@@ -21,7 +20,7 @@ int     answer;
 int     noRun;
 
 int main(void) {
-    show();
+    read("."); // start us off
     do {
         prompt();
     } while (1);
@@ -47,9 +46,6 @@ void prompt() {
     read(got);
 }
 
-void show() {
-    read(".");
-}
 /*
  * read cwd and store for action
  */
