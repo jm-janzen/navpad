@@ -15,7 +15,7 @@ using namespace std;
  */
 void prompt();
 void read(string);
-char* match(int);
+string match(int);
 
 struct  dirent *dir;
 char*   dirStack[255];
@@ -33,7 +33,7 @@ int main(void) {
  * validate answer
  */
 void prompt() {
-    char* got;
+    string got;
 
     do {
         printf("\n> ");
@@ -49,7 +49,7 @@ void prompt() {
     }
 
     got = match(answer);
-    printf("got:%s\n", got);
+    printf("got:%s\n", got.c_str());
     read(got);
 }
 
@@ -84,7 +84,7 @@ void read(string l) {
 /*
  * match answer == index in directory stack
  */
-char* match(int a) {
+string match(int a) {
     printf("match(%d)\n", a);
     if (a == 0) {
         return "../";
