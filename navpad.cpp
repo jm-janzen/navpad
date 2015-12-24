@@ -1,5 +1,6 @@
-#include <stdio.h>
-#include <string.h>
+#include <stdio.h> // TODO replace w/ iostream
+#include <string>
+#include <cstring>
 #include <dirent.h>
 using namespace std;
 
@@ -13,7 +14,7 @@ using namespace std;
  * prototypes
  */
 void prompt();
-void read(char*);
+void read(string);
 char* match(int);
 
 struct  dirent *dir;
@@ -55,10 +56,10 @@ void prompt() {
 /*
  * read cwd and store for action
  */
-void read(char* l) {
-    DIR* d = opendir(l);
+void read(string l) {
+    DIR* d = opendir(l.c_str());
     if (d == NULL) {
-        printf("Error! Could not open directory %s", l);
+        printf("Error! Could not open directory %s", l.c_str());
     }
 
     int idx = 0;
