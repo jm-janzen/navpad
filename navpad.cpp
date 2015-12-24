@@ -66,17 +66,13 @@ void read(string l) {
     while ((dir = readdir(d)) != NULL) {
         char* fileName = dir->d_name;
         if (!strncmp(fileName, ".", 1) != 0) {
-            /*
-                * suppress display of hidden files
-                */
-        } else {
-            if (idx == 0) {
-                printf("[%d]\t%s\n", idx, "../");
-            }
-            idx++; // start at [1], [0] reserved for prev dir
-            dirStack[idx] = fileName;
-            printf("[%d]\t%s\n", idx, dirStack[idx]);
+            continue;
+        } else if (idx == 0) {
+            printf("[%d]\t%s\n", idx, "../");
         }
+        idx++; // start at [1], [0] reserved for prev dir
+        dirStack[idx] = fileName;
+        printf("[%d]\t%s\n", idx, dirStack[idx]);
     }
     closedir(d);
 }
