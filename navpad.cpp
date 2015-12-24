@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <dirent.h>
+using namespace std;
 
 /* XXX bugs:
  * 1)   entering N greater than sizeof num files: segmentation fault
@@ -63,11 +64,7 @@ void read(char* l) {
     int idx = 0;
     while ((dir = readdir(d)) != NULL) {
         char* fileName = dir->d_name;
-        if (!strcmp(fileName, "..") || !strcmp(fileName, ".")) {
-            /*
-                * supress display of ./ ../
-                */
-        } else if (!strncmp(".", fileName, 1)) {
+        if (!strncmp(fileName, ".", 1) != 0) {
             /*
                 * suppress display of hidden files
                 */
